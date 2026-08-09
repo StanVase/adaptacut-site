@@ -232,8 +232,8 @@ header {
   fill: none;
   stroke: #4b5160;
   stroke-width: 2.5;
-  stroke-dasharray: 480;
-  stroke-dashoffset: 480;
+  stroke-dasharray: 700;
+  stroke-dashoffset: 700;
   animation: draw 1.6s ease forwards 0.3s;
 }
 
@@ -241,9 +241,18 @@ header {
   fill: none;
   stroke: var(--gold);
   stroke-width: 3;
-  stroke-dasharray: 480;
-  stroke-dashoffset: 480;
+  stroke-dasharray: 700;
+  stroke-dashoffset: 700;
   animation: draw 1.6s ease forwards 0.7s;
+}
+
+.chart-caption {
+  margin: 14px 0 0;
+  font-size: 12.5px;
+  line-height: 1.5;
+  color: var(--text-dim);
+  border-top: 1px solid var(--border);
+  padding-top: 12px;
 }
 
 @keyframes draw {
@@ -429,7 +438,7 @@ footer {
   <div class="wrap hero-grid">
     <div>
       <span class="eyebrow">Analytics · Production · Algorithmic Optimization</span>
-      <h1>We don't make videos for the feed.<br>We build a product that<br>gets your channel <span class="accent">to monetization</span>.</h1>
+      <h1>We don't make videos for the feed.<br>We build a product that<br>gets your channel to <span class="accent">monetization</span>.</h1>
       <p class="lead">A team that packages content for Shorts, Reels, TikTok and YouTube the way a producer builds a product — not by feel, but by data.</p>
       <div class="cta-row">
         <a href="#products" class="btn btn-primary">Get a free hook audit</a>
@@ -440,18 +449,30 @@ footer {
 
     <div class="chart-card">
       <div class="chart-label">
-        <span>AUDIENCE RETENTION</span>
-        <span>0:00 — 0:60</span>
+        <span>AUDIENCE RETENTION, % OF START</span>
+        <span>ILLUSTRATIVE MODEL</span>
       </div>
-      <svg viewBox="0 0 480 220" width="100%" height="auto" role="img" aria-label="Retention comparison: typical video loses viewers faster than an optimized one">
-        <line x1="0" y1="210" x2="480" y2="210" stroke="rgba(255,255,255,0.08)" stroke-width="1"/>
-        <path class="retention-line-typical" d="M0,20 C 80,70 140,150 480,195" />
-        <path class="retention-line-optimized" d="M0,20 C 100,45 200,70 480,95" />
+      <svg viewBox="0 0 520 250" width="100%" height="auto" role="img" aria-label="Retention comparison: typical video loses viewers faster than a video with optimized packaging">
+        <line x1="40" y1="20" x2="500" y2="20" stroke="rgba(255,255,255,0.06)" stroke-width="1"/>
+        <line x1="40" y1="110" x2="500" y2="110" stroke="rgba(255,255,255,0.06)" stroke-width="1"/>
+        <line x1="40" y1="200" x2="500" y2="200" stroke="rgba(255,255,255,0.14)" stroke-width="1"/>
+
+        <text x="30" y="24" text-anchor="end" font-family="JetBrains Mono, monospace" font-size="11" fill="#6b7280">100%</text>
+        <text x="30" y="114" text-anchor="end" font-family="JetBrains Mono, monospace" font-size="11" fill="#6b7280">50%</text>
+        <text x="30" y="204" text-anchor="end" font-family="JetBrains Mono, monospace" font-size="11" fill="#6b7280">0%</text>
+
+        <text x="40" y="222" text-anchor="start" font-family="JetBrains Mono, monospace" font-size="11" fill="#6b7280">0:00</text>
+        <text x="270" y="222" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="11" fill="#6b7280">0:30</text>
+        <text x="500" y="222" text-anchor="end" font-family="JetBrains Mono, monospace" font-size="11" fill="#6b7280">1:00</text>
+
+        <path class="retention-line-typical" d="M40,20 C 140,80 220,160 500,185" />
+        <path class="retention-line-optimized" d="M40,20 C 160,50 300,75 500,100" />
       </svg>
       <div class="legend">
         <div class="legend-item"><span class="dot grey"></span> Typical packaging</div>
         <div class="legend-item"><span class="dot gold"></span> After optimization</div>
       </div>
+      <p class="chart-caption">How watch-through typically drops without a hook structure — and how thoughtful first-seconds packaging holds it.</p>
     </div>
   </div>
 </section>
@@ -502,7 +523,7 @@ footer {
   <div class="wrap">
     <div class="section-head">
       <span class="eyebrow">Products</span>
-      <h2>Start free, grow from there</h2>
+      <h2>Start free and grow from there</h2>
     </div>
     <div class="products-grid">
       <div class="product-card featured">

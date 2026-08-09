@@ -219,8 +219,8 @@ header {
   fill: none;
   stroke: #4b5160;
   stroke-width: 2.5;
-  stroke-dasharray: 480;
-  stroke-dashoffset: 480;
+  stroke-dasharray: 700;
+  stroke-dashoffset: 700;
   animation: draw 1.6s ease forwards 0.3s;
 }
 
@@ -228,9 +228,18 @@ header {
   fill: none;
   stroke: var(--gold);
   stroke-width: 3;
-  stroke-dasharray: 480;
-  stroke-dashoffset: 480;
+  stroke-dasharray: 700;
+  stroke-dashoffset: 700;
   animation: draw 1.6s ease forwards 0.7s;
+}
+
+.chart-caption {
+  margin: 14px 0 0;
+  font-size: 12.5px;
+  line-height: 1.5;
+  color: var(--text-dim);
+  border-top: 1px solid var(--border);
+  padding-top: 12px;
 }
 
 @keyframes draw {
