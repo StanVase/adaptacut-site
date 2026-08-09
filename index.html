@@ -1,0 +1,577 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Adaptacut — продукт, который выводит канал к монетизации</title>
+<meta name="description" content="Аналитика, упаковка, контент-продакшн и алгоритмическая оптимизация для авторов Shorts, Reels, TikTok и YouTube.">
+<link rel="alternate" hreflang="ru" href="/">
+<link rel="alternate" hreflang="en" href="/en/">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+/* ===== Design tokens ===== */
+:root {
+  --bg: #12151c;
+  --surface: #1a1e29;
+  --surface-2: #232838;
+  --border: rgba(255, 255, 255, 0.09);
+  --text: #f3f1ec;
+  --text-muted: #97a0af;
+  --text-dim: #6b7280;
+  --gold: #f2b705;
+  --gold-dim: #b8890a;
+  --teal: #34d6c0;
+  --teal-dim: #23a394;
+
+  --font-display: "Space Grotesk", sans-serif;
+  --font-body: "Inter", sans-serif;
+  --font-mono: "JetBrains Mono", monospace;
+
+  --container: 1120px;
+  --radius: 14px;
+}
+
+* { box-sizing: border-box; }
+
+html { scroll-behavior: smooth; }
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--font-body);
+  font-size: 16px;
+  line-height: 1.55;
+  -webkit-font-smoothing: antialiased;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  * { animation-duration: 0.001ms !important; transition-duration: 0.001ms !important; }
+}
+
+a { color: inherit; }
+
+.wrap {
+  max-width: var(--container);
+  margin: 0 auto;
+  padding: 0 24px;
+}
+
+h1, h2, h3 {
+  font-family: var(--font-display);
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  margin: 0;
+}
+
+.eyebrow {
+  font-family: var(--font-mono);
+  font-size: 12.5px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--teal);
+  display: inline-block;
+  margin-bottom: 14px;
+}
+
+.muted { color: var(--text-muted); }
+
+/* ===== Header ===== */
+header {
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  backdrop-filter: blur(10px);
+  background: rgba(18, 21, 28, 0.82);
+  border-bottom: 1px solid var(--border);
+}
+
+.header-inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 18px 24px;
+}
+
+.logo {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 18px;
+  letter-spacing: 0.02em;
+}
+
+.logo span { color: var(--gold); }
+
+.lang-toggle {
+  display: flex;
+  gap: 2px;
+  font-family: var(--font-mono);
+  font-size: 13px;
+  border: 1px solid var(--border);
+  border-radius: 100px;
+  overflow: hidden;
+}
+
+.lang-toggle a {
+  padding: 6px 14px;
+  text-decoration: none;
+  color: var(--text-dim);
+}
+
+.lang-toggle a.active {
+  background: var(--surface-2);
+  color: var(--text);
+}
+
+/* ===== Hero ===== */
+.hero {
+  padding: 88px 0 64px;
+  position: relative;
+  overflow: hidden;
+}
+
+.hero-grid {
+  display: grid;
+  grid-template-columns: 1.1fr 0.9fr;
+  gap: 56px;
+  align-items: center;
+}
+
+.hero h1 {
+  font-size: clamp(32px, 4.4vw, 50px);
+  line-height: 1.14;
+}
+
+.hero h1 .accent { color: var(--gold); }
+
+.hero p.lead {
+  font-size: 18px;
+  color: var(--text-muted);
+  max-width: 46ch;
+  margin-top: 22px;
+}
+
+.cta-row {
+  display: flex;
+  gap: 14px;
+  margin-top: 34px;
+  flex-wrap: wrap;
+}
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-family: var(--font-body);
+  font-weight: 600;
+  font-size: 15px;
+  padding: 14px 24px;
+  border-radius: 100px;
+  text-decoration: none;
+  border: 1px solid transparent;
+  cursor: pointer;
+  transition: transform 0.15s ease, opacity 0.15s ease;
+}
+
+.btn:hover { transform: translateY(-1px); }
+
+.btn-primary {
+  background: var(--gold);
+  color: #16130a;
+}
+
+.btn-primary:hover { opacity: 0.92; }
+
+.btn-ghost {
+  background: transparent;
+  border-color: var(--border);
+  color: var(--text);
+}
+
+.hero-note {
+  margin-top: 16px;
+  font-family: var(--font-mono);
+  font-size: 12.5px;
+  color: var(--text-dim);
+}
+
+/* ===== Retention chart — signature element ===== */
+.chart-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 22px 22px 18px;
+}
+
+.chart-card .chart-label {
+  display: flex;
+  justify-content: space-between;
+  font-family: var(--font-mono);
+  font-size: 11.5px;
+  color: var(--text-dim);
+  margin-bottom: 6px;
+}
+
+.legend {
+  display: flex;
+  gap: 18px;
+  margin-top: 12px;
+  font-family: var(--font-mono);
+  font-size: 12px;
+}
+
+.legend-item { display: flex; align-items: center; gap: 7px; color: var(--text-muted); }
+.dot { width: 8px; height: 8px; border-radius: 50%; }
+.dot.grey { background: #4b5160; }
+.dot.gold { background: var(--gold); }
+
+.retention-line-typical {
+  fill: none;
+  stroke: #4b5160;
+  stroke-width: 2.5;
+  stroke-dasharray: 480;
+  stroke-dashoffset: 480;
+  animation: draw 1.6s ease forwards 0.3s;
+}
+
+.retention-line-optimized {
+  fill: none;
+  stroke: var(--gold);
+  stroke-width: 3;
+  stroke-dasharray: 480;
+  stroke-dashoffset: 480;
+  animation: draw 1.6s ease forwards 0.7s;
+}
+
+@keyframes draw {
+  to { stroke-dashoffset: 0; }
+}
+
+/* ===== Sections ===== */
+section { padding: 76px 0; }
+
+.section-head { max-width: 620px; margin-bottom: 44px; }
+.section-head h2 { font-size: clamp(26px, 3vw, 34px); }
+.section-head p { color: var(--text-muted); margin-top: 12px; font-size: 16.5px; }
+
+/* Pain grid */
+.pain-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 14px;
+}
+
+.pain-item {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 20px 22px;
+  font-size: 15.5px;
+  color: var(--text-muted);
+}
+
+.pain-item::before {
+  content: "—";
+  color: var(--gold-dim);
+  margin-right: 10px;
+}
+
+.pain-transition {
+  margin-top: 28px;
+  padding-top: 28px;
+  border-top: 1px solid var(--border);
+  font-size: 17px;
+  max-width: 68ch;
+}
+
+/* Steps */
+.steps { display: grid; grid-template-columns: repeat(3, 1fr); gap: 28px; }
+
+.step-num {
+  font-family: var(--font-mono);
+  font-size: 13px;
+  color: var(--teal);
+  border: 1px solid var(--teal-dim);
+  width: 30px; height: 30px;
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  margin-bottom: 18px;
+}
+
+.step h3 { font-size: 18px; margin-bottom: 10px; }
+.step p { color: var(--text-muted); font-size: 15px; }
+
+/* Products */
+.products-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 16px;
+}
+
+.product-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 26px 22px;
+  display: flex;
+  flex-direction: column;
+  transition: border-color 0.2s ease;
+}
+
+.product-card:hover { border-color: var(--teal-dim); }
+
+.product-card.featured {
+  background: linear-gradient(165deg, var(--surface-2), var(--surface));
+  border-color: var(--gold-dim);
+}
+
+.product-icon { font-size: 22px; margin-bottom: 14px; }
+
+.product-card h3 { font-size: 16.5px; margin-bottom: 8px; }
+
+.product-price {
+  font-family: var(--font-mono);
+  font-size: 13px;
+  color: var(--gold);
+  margin-bottom: 12px;
+}
+
+.product-card p.desc {
+  color: var(--text-muted);
+  font-size: 14px;
+  flex-grow: 1;
+  margin-bottom: 18px;
+}
+
+.product-card .btn { padding: 10px 18px; font-size: 13.5px; width: 100%; justify-content: center; }
+
+/* Team */
+.team-block {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 40px;
+  max-width: 780px;
+}
+
+.team-block p { font-size: 17px; color: var(--text-muted); }
+.team-block p + p { margin-top: 16px; }
+
+/* Final CTA */
+.final-cta {
+  text-align: center;
+  background: radial-gradient(ellipse at top, var(--surface-2), var(--bg));
+  border-radius: 24px;
+  padding: 72px 24px;
+  border: 1px solid var(--border);
+}
+
+.final-cta h2 { font-size: clamp(26px, 3.4vw, 38px); max-width: 20ch; margin: 0 auto; }
+.final-cta p { color: var(--text-muted); margin: 16px auto 0; max-width: 44ch; }
+.final-cta .cta-row { justify-content: center; }
+
+/* Footer */
+footer {
+  border-top: 1px solid var(--border);
+  padding: 36px 0;
+  margin-top: 40px;
+}
+
+.footer-inner {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 16px;
+  font-size: 13.5px;
+  color: var(--text-dim);
+}
+
+.footer-links { display: flex; gap: 20px; }
+.footer-links a { text-decoration: none; color: var(--text-dim); }
+.footer-links a:hover { color: var(--text-muted); }
+
+/* ===== Responsive ===== */
+@media (max-width: 860px) {
+  .hero-grid { grid-template-columns: 1fr; gap: 40px; }
+  .pain-grid { grid-template-columns: 1fr; }
+  .steps { grid-template-columns: 1fr; gap: 34px; }
+  .products-grid { grid-template-columns: 1fr 1fr; }
+  .team-block { padding: 28px; }
+  .final-cta { padding: 52px 20px; }
+}
+
+@media (max-width: 520px) {
+  .products-grid { grid-template-columns: 1fr; }
+  .header-inner { padding: 14px 18px; }
+  .hero { padding: 56px 0 44px; }
+  section { padding: 56px 0; }
+}
+
+</style>
+</head>
+<body>
+
+<header>
+  <div class="wrap header-inner">
+    <div class="logo">Adaptacut <span>·</span></div>
+    <div class="lang-toggle">
+      <a href="/" class="active">RU</a>
+      <a href="/en/">EN</a>
+    </div>
+  </div>
+</header>
+
+<section class="hero">
+  <div class="wrap hero-grid">
+    <div>
+      <span class="eyebrow">Аналитика · Продакшн · Алгоритмическая оптимизация</span>
+      <h1>Мы не делаем видео для ленты.<br>Мы готовим продукт, который<br>выводит канал <span class="accent">к монетизации</span>.</h1>
+      <p class="lead">Команда, которая упаковывает контент для Shorts, Reels, TikTok и YouTube так же системно, как продюсер собирает продукт — не на глаз, а через данные.</p>
+      <div class="cta-row">
+        <a href="#products" class="btn btn-primary">Получить бесплатный хук-аудит</a>
+        <a href="#how" class="btn btn-ghost">Как это работает</a>
+      </div>
+      <div class="hero-note">Бесплатно · без карты · один раз на аккаунт</div>
+    </div>
+
+    <div class="chart-card">
+      <div class="chart-label">
+        <span>УДЕРЖАНИЕ АУДИТОРИИ</span>
+        <span>0:00 — 0:60</span>
+      </div>
+      <svg viewBox="0 0 480 220" width="100%" height="auto" role="img" aria-label="Сравнение удержания аудитории: типичное видео теряет зрителей быстрее оптимизированного">
+        <line x1="0" y1="210" x2="480" y2="210" stroke="rgba(255,255,255,0.08)" stroke-width="1"/>
+        <path class="retention-line-typical" d="M0,20 C 80,70 140,150 480,195" />
+        <path class="retention-line-optimized" d="M0,20 C 100,45 200,70 480,95" />
+      </svg>
+      <div class="legend">
+        <div class="legend-item"><span class="dot grey"></span> Типичная упаковка</div>
+        <div class="legend-item"><span class="dot gold"></span> После оптимизации</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="pain">
+  <div class="wrap">
+    <div class="section-head">
+      <span class="eyebrow">Знакомая ситуация?</span>
+      <h2>Дело редко в удаче алгоритма</h2>
+    </div>
+    <div class="pain-grid">
+      <div class="pain-item">Видео снято хорошо, а просмотров почти нет</div>
+      <div class="pain-item">Кажется, что алгоритм «не видит» канал</div>
+      <div class="pain-item">Заголовки и обложки собираются по наитию, без системы</div>
+      <div class="pain-item">Нет понимания, что именно мешает выйти на монетизацию</div>
+    </div>
+    <p class="pain-transition muted">Контент редко упаковывают как продукт — с аналитикой, структурой удержания и стратегией, а не только со съёмкой и монтажом. Мы закрываем именно это.</p>
+  </div>
+</section>
+
+<section id="how">
+  <div class="wrap">
+    <div class="section-head">
+      <span class="eyebrow">Процесс</span>
+      <h2>Что вы получаете</h2>
+    </div>
+    <div class="steps">
+      <div class="step">
+        <div class="step-num">1</div>
+        <h3>Бесплатный хук-аудит</h3>
+        <p>Присылаете тему видео — получаете 10 заголовков, 3 концепции обложки и сценарий первых 15 секунд. Один раз на аккаунт.</p>
+      </div>
+      <div class="step">
+        <div class="step-num">2</div>
+        <h3>Магнит-пакет</h3>
+        <p>Расширенная упаковка с A/B-вариантами под конкретную платформу — у Shorts, Reels, TikTok и YouTube разные правила.</p>
+      </div>
+      <div class="step">
+        <div class="step-num">3</div>
+        <h3>Рост дальше</h3>
+        <p>Диагностика провалов, сценарии на удержание, дорожная карта монетизации — по мере роста канала.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="products">
+  <div class="wrap">
+    <div class="section-head">
+      <span class="eyebrow">Продукты</span>
+      <h2>Начните с бесплатного, растите дальше</h2>
+    </div>
+    <div class="products-grid">
+      <div class="product-card featured">
+        <div class="product-icon">🎣</div>
+        <h3>Хук-аудит</h3>
+        <div class="product-price">Бесплатно · 1 раз</div>
+        <p class="desc">10 заголовков + 3 обложки + сценарий первых 15 секунд.</p>
+        <a href="#" class="btn btn-primary">Получить</a>
+      </div>
+      <div class="product-card">
+        <div class="product-icon">💰</div>
+        <h3>Магнит-пакет</h3>
+        <div class="product-price">от $9</div>
+        <p class="desc">Полная упаковка видео под платформу: заголовки, обложки, хук, A/B-варианты.</p>
+        <a href="#" class="btn btn-ghost">Заказать</a>
+      </div>
+      <div class="product-card">
+        <div class="product-icon">🔍</div>
+        <h3>Диагностика провала</h3>
+        <div class="product-price">от $19</div>
+        <p class="desc">Разбор удержания и точки отвала конкретного видео + 3 правки.</p>
+        <a href="#" class="btn btn-ghost">Заказать</a>
+      </div>
+      <div class="product-card">
+        <div class="product-icon">🗺️</div>
+        <h3>Roadmap монетизации</h3>
+        <div class="product-price">от $49</div>
+        <p class="desc">Персональная стратегия: что монетизировать и в каком порядке.</p>
+        <a href="#" class="btn btn-ghost">Заказать</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="team">
+  <div class="wrap">
+    <div class="section-head">
+      <span class="eyebrow">Кто мы</span>
+      <h2>Команда, а не разовая услуга</h2>
+    </div>
+    <div class="team-block">
+      <p>Команда с опытом в маркетинге, продажах, PR и бренд-стратегии, объединённым с практикой внедрения ИИ в контент-продакшн.</p>
+      <p>Мы разбираем канал так, как разбирает бренд-менеджер продукт — через данные и структуру, а не через случайные советы из комментариев.</p>
+    </div>
+  </div>
+</section>
+
+<section id="cta">
+  <div class="wrap">
+    <div class="final-cta">
+      <h2>Готовы упаковать канал как продукт?</h2>
+      <p>Начните с бесплатного хук-аудита — без риска, без оплаты, за пару минут.</p>
+      <div class="cta-row">
+        <a href="#products" class="btn btn-primary">Получить бесплатный хук-аудит</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap footer-inner">
+    <div>© 2026 Adaptacut</div>
+    <div class="footer-links">
+      <a href="#">Telegram</a>
+      <a href="#">Instagram</a>
+      <a href="#">TikTok</a>
+    </div>
+  </div>
+</footer>
+
+</body>
+</html>
