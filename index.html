@@ -793,6 +793,13 @@ footer {
     modalMsg.className = 'modal-msg';
     document.getElementById('fieldName').value = '';
     document.getElementById('fieldContact').value = '';
+
+    if (localStorage.getItem('adaptacut_claimed') === '1') {
+      stepDate.innerHTML = '<h3>Бесплатный аудит уже использован</h3><p class="modal-subtitle">Вы уже получали бесплатный хук-аудит с этого устройства. Посмотрите платные пакеты ниже — там больше вариантов и доработка под платформу.</p>';
+      showStep(stepDate);
+      return;
+    }
+
     showStep(stepDate);
     loadAvailability();
   }
@@ -869,6 +876,13 @@ footer {
       });
       const data = await res.json();
 
+      if (res.status === 403) {
+        localStorage.setItem('adaptacut_claimed', '1');
+        modalMsg.className = 'modal-msg error';
+        modalMsg.textContent = 'Бесплатный аудит уже был использован с этого контакта или устройства.';
+        return;
+      }
+
       if (res.status === 409) {
         modalMsg.className = 'modal-msg error';
         modalMsg.textContent = 'Это места на эту дату только что закончились — выберите другую дату.';
@@ -884,6 +898,7 @@ footer {
       }
 
       document.getElementById('successText').textContent = 'Вы записаны. Мы свяжемся с вами в ближайшее время.';
+      localStorage.setItem('adaptacut_claimed', '1');
       showStep(stepSuccess);
     } catch (e) {
       modalMsg.className = 'modal-msg error';

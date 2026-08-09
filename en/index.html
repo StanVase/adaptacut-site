@@ -790,6 +790,13 @@ footer {
     modalMsg.className = 'modal-msg';
     document.getElementById('fieldName').value = '';
     document.getElementById('fieldContact').value = '';
+
+    if (localStorage.getItem('adaptacut_claimed') === '1') {
+      stepDate.innerHTML = '<h3>Free audit already used</h3><p class="modal-subtitle">You\'ve already claimed a free hook audit from this device. Check out the paid packages below — more options and platform-specific tuning.</p>';
+      showStep(stepDate);
+      return;
+    }
+
     showStep(stepDate);
     loadAvailability();
   }
@@ -866,6 +873,13 @@ footer {
       });
       const data = await res.json();
 
+      if (res.status === 403) {
+        localStorage.setItem('adaptacut_claimed', '1');
+        modalMsg.className = 'modal-msg error';
+        modalMsg.textContent = 'This free audit has already been used from this contact or device.';
+        return;
+      }
+
       if (res.status === 409) {
         modalMsg.className = 'modal-msg error';
         modalMsg.textContent = 'Those spots just filled up — please pick another date.';
@@ -881,6 +895,7 @@ footer {
       }
 
       document.getElementById('successText').textContent = "You're booked. We'll reach out soon.";
+      localStorage.setItem('adaptacut_claimed', '1');
       showStep(stepSuccess);
     } catch (e) {
       modalMsg.className = 'modal-msg error';
