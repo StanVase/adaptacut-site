@@ -879,7 +879,8 @@ footer {
 
       if (!res.ok) {
         modalMsg.className = 'modal-msg error';
-        modalMsg.textContent = 'Что-то пошло не так. Попробуйте ещё раз.';
+        modalMsg.textContent = 'Ошибка: ' + (data.details || data.error || 'неизвестно');
+        console.error('Booking error details:', data);
         return;
       }
 
