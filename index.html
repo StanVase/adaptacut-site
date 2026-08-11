@@ -7,6 +7,7 @@
 <meta name="description" content="Аналитика, упаковка, контент-продакшн и алгоритмическая оптимизация для авторов Shorts, Reels, TikTok и YouTube.">
 <link rel="alternate" hreflang="ru" href="/">
 <link rel="alternate" hreflang="en" href="/en/">
+<link rel="icon" href="favicon.png" type="image/png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
@@ -715,7 +716,7 @@ footer {
 
 <footer>
   <div class="wrap footer-inner">
-    <div>© 2026 Adaptacut</div>
+    <div>© 2026 Adaptacut · Все права защищены</div>
     <div class="footer-links">
       <a href="#">Telegram</a>
       <a href="#">Instagram</a>
@@ -746,6 +747,10 @@ footer {
       <div class="form-field">
         <label for="fieldContact">Telegram или email</label>
         <input type="text" id="fieldContact" maxlength="100" placeholder="@username или email">
+      </div>
+      <div class="form-field">
+        <label for="fieldTopic">Тема видео</label>
+        <input type="text" id="fieldTopic" maxlength="300" placeholder="О чём видео — коротко">
       </div>
       <div class="cta-row">
         <button class="btn btn-ghost" id="backToDate" type="button">Назад</button>
@@ -857,10 +862,11 @@ footer {
   async function submitBooking() {
     const name = document.getElementById('fieldName').value.trim();
     const contact = document.getElementById('fieldContact').value.trim();
+    const topic = document.getElementById('fieldTopic').value.trim();
 
-    if (!name || !contact) {
+    if (!name || !contact || !topic) {
       modalMsg.className = 'modal-msg error';
-      modalMsg.textContent = 'Заполните оба поля.';
+      modalMsg.textContent = 'Заполните все поля.';
       return;
     }
 
@@ -872,7 +878,7 @@ footer {
       const res = await fetch(API_BOOK, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ name, contact, date: selectedDate })
+        body: JSON.stringify({ name, contact, date: selectedDate, topic })
       });
       const data = await res.json();
 

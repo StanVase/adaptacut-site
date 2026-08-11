@@ -7,6 +7,7 @@
 <meta name="description" content="Analytics, packaging, content production, and algorithmic optimization for Shorts, Reels, TikTok and YouTube creators.">
 <link rel="alternate" hreflang="ru" href="/">
 <link rel="alternate" hreflang="en" href="/en/">
+<link rel="icon" href="../favicon.png" type="image/png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
@@ -712,7 +713,7 @@ footer {
 
 <footer>
   <div class="wrap footer-inner">
-    <div>© 2026 Adaptacut</div>
+    <div>© 2026 Adaptacut · All rights reserved</div>
     <div class="footer-links">
       <a href="#">Telegram</a>
       <a href="#">Instagram</a>
@@ -743,6 +744,10 @@ footer {
       <div class="form-field">
         <label for="fieldContact">Telegram or email</label>
         <input type="text" id="fieldContact" maxlength="100" placeholder="@username or email">
+      </div>
+      <div class="form-field">
+        <label for="fieldTopic">Video topic</label>
+        <input type="text" id="fieldTopic" maxlength="300" placeholder="What's the video about — briefly">
       </div>
       <div class="cta-row">
         <button class="btn btn-ghost" id="backToDate" type="button">Back</button>
@@ -854,10 +859,11 @@ footer {
   async function submitBooking() {
     const name = document.getElementById('fieldName').value.trim();
     const contact = document.getElementById('fieldContact').value.trim();
+    const topic = document.getElementById('fieldTopic').value.trim();
 
-    if (!name || !contact) {
+    if (!name || !contact || !topic) {
       modalMsg.className = 'modal-msg error';
-      modalMsg.textContent = 'Please fill in both fields.';
+      modalMsg.textContent = 'Please fill in all fields.';
       return;
     }
 
@@ -869,7 +875,7 @@ footer {
       const res = await fetch(API_BOOK, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ name, contact, date: selectedDate })
+        body: JSON.stringify({ name, contact, date: selectedDate, topic })
       });
       const data = await res.json();
 

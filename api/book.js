@@ -11,9 +11,9 @@ export default async function handler(req, res) {
     return res.status(500).json({ error: 'Server not configured' });
   }
 
-  const { name, contact, date } = req.body || {};
+  const { name, contact, date, topic } = req.body || {};
 
-  if (!name || !contact || !date) {
+  if (!name || !contact || !date || !topic) {
     return res.status(400).json({ error: 'Missing fields' });
   }
 
@@ -22,9 +22,30 @@ export default async function handler(req, res) {
     return res.status(400).json({ error: 'Invalid date format' });
   }
 
+  const contactNorm = String(contact).trim().toLowerCase().replace(/'/g, "\\'");
+  const ip = (req.headers['x-forwarded-for'] || '').split(',')[0].trim() || 'unknown';
+
   try {
+    // Проверяем, не использовал ли этот контакт или этот IP бесплатный продукт раньше
+    const dupParts = [`LOWER({Contact}) = '${contactNorm}'`];
+    if (ip !== 'unknown') {
+      dupParts.push(`{IP} = '${ip}'`);
+    }
+    const dupFormula = `AND({Product} = 'Hook Audit Free', OR(${dupParts.join(', ')}))`;
+    const dupUrl = `https://api.airtable.com/v0/${BASE_ID}/${TABLE_ID}?filterByFormula=${encodeURIComponent(dupFormula)}&maxRecords=1`;
+    const dupRes = await fetch(dupUrl, {
+      headers: { Authorization: `Bearer ${AIRTABLE_TOKEN}` }
+    });
+
+    if (dupRes.ok) {
+      const dupData = await dupRes.json();
+      if ((dupData.records || []).length > 0) {
+        return res.status(403).json({ error: 'already_used', message: 'Бесплатный аудит уже был использован с этого контакта или устройства' });
+      }
+    }
+
     // Проверяем текущее количество записей на эту дату
-    const formula = `{BookingDate} = '${date}'`;
+    const formula = `IS_SAME({BookingDate}, '${date}', 'day')`;
     const checkUrl = `https://api.airtable.com/v0/${BASE_ID}/${TABLE_ID}?filterByFormula=${encodeURIComponent(formula)}`;
     const checkRes = await fetch(checkUrl, {
       headers: { Authorization: `Bearer ${AIRTABLE_TOKEN}` }
@@ -32,6 +53,7 @@ export default async function handler(req, res) {
 
     if (!checkRes.ok) {
       const errText = await checkRes.text();
+      console.error('Airtable check failed:', checkRes.status, errText);
       return res.status(502).json({ error: 'Airtable check failed', details: errText });
     }
 
@@ -57,19 +79,23 @@ export default async function handler(req, res) {
           Product: 'Hook Audit Free',
           BookingDate: date,
           Slot: nextSlot,
-          PaymentStatus: 'Free'
+          PaymentStatus: 'Free',
+          IP: ip,
+          Topic: String(topic).slice(0, 500)
         }
       })
     });
 
     if (!createRes.ok) {
       const errData = await createRes.text();
+      console.error('Airtable create failed:', createRes.status, errData);
       return res.status(502).json({ error: 'Airtable create failed', details: errData });
     }
 
     res.setHeader('Cache-Control', 'no-store');
     return res.status(200).json({ success: true, slot: nextSlot });
   } catch (err) {
+    console.error('Book handler crashed:', err);
     return res.status(500).json({ error: 'Server error' });
   }
 }
